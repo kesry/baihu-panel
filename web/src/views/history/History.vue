@@ -379,21 +379,21 @@ watch(() => route.query, (newQuery) => {
         <!-- 小屏表头 -->
         <div
           class="flex sm:hidden items-center gap-2 px-3 py-2 border-b bg-muted/20 text-xs text-muted-foreground font-medium">
+          <span class="w-3 shrink-0"></span>
           <span class="w-14 shrink-0">序号</span>
           <span class="w-8 shrink-0 text-center">类型</span>
           <span class="flex-1 min-w-0">任务名称</span>
-          <span class="w-8 shrink-0 text-center">状态</span>
           <span class="w-16 text-right shrink-0">耗时</span>
           <span class="w-8 text-center shrink-0"></span>
         </div>
         <!-- 大屏表头 -->
         <div
           class="hidden sm:flex items-center gap-4 px-4 h-11 border-b bg-muted/20 text-sm text-muted-foreground font-medium">
+          <span class="w-3 shrink-0"></span>
           <span class="w-16 shrink-0">序号</span>
           <span class="w-12 shrink-0 text-center">类型</span>
           <span class="w-36 shrink-0">任务名称</span>
           <span class="flex-1 min-w-0">命令</span>
-          <span class="w-12 shrink-0 text-center">状态</span>
           <span class="w-16 text-right shrink-0">耗时</span>
           <span v-if="!selectedLog" class="w-40 text-right shrink-0 hidden md:block">执行时间</span>
           <span class="w-10 shrink-0 text-center"></span>
@@ -409,6 +409,15 @@ watch(() => route.query, (newQuery) => {
           ]" @click="selectLog(log)">
             <!-- 小屏行 -->
             <div class="flex sm:hidden items-center gap-2 px-3 py-2">
+              <span class="w-3 flex justify-center shrink-0">
+                <div v-if="log.status === TASK_STATUS.SUCCESS" class="h-1.5 w-1.5 rounded-full bg-green-500 shrink-0" title="成功"></div>
+                <div v-else-if="log.status === TASK_STATUS.FAILED" class="h-1.5 w-1.5 rounded-full bg-red-500 shrink-0" title="失败"></div>
+                <div v-else-if="log.status === TASK_STATUS.RUNNING" class="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.5)] shrink-0" title="运行中"></div>
+                <div v-else-if="log.status === TASK_STATUS.PENDING" class="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse shrink-0" title="等待中"></div>
+                <div v-else-if="log.status === TASK_STATUS.TIMEOUT" class="h-1.5 w-1.5 rounded-full bg-orange-500 shrink-0" title="超时"></div>
+                <div v-else-if="log.status === TASK_STATUS.CANCELLED" class="h-1.5 w-1.5 rounded-full bg-muted-foreground shrink-0" title="已取消"></div>
+                <div v-else class="h-1.5 w-1.5 rounded-full bg-muted-foreground/20 shrink-0"></div>
+              </span>
               <span class="w-14 shrink-0 text-muted-foreground text-xs">#{{ total - (currentPage - 1) * pageSize - index
                 }}</span>
               <span class="w-8 shrink-0 flex justify-center" :title="getTaskTypeTitle(log.task_type || 'task')">
@@ -416,32 +425,6 @@ watch(() => route.query, (newQuery) => {
                 <Terminal v-else class="h-3.5 w-3.5 text-primary" />
               </span>
               <span class="flex-1 min-w-0 font-medium truncate text-xs">{{ log.task_name }}</span>
-              <span class="w-8 flex justify-center shrink-0">
-                <div v-if="log.status === TASK_STATUS.SUCCESS"
-                  class="h-5 w-5 rounded-full bg-green-500/10 flex items-center justify-center">
-                  <Check class="h-3 w-3 text-green-500 stroke-[3]" />
-                </div>
-                <div v-else-if="log.status === TASK_STATUS.FAILED"
-                  class="h-5 w-5 rounded-full bg-red-500/10 flex items-center justify-center">
-                  <X class="h-3 w-3 text-red-500 stroke-[3]" />
-                </div>
-                <div v-else-if="log.status === TASK_STATUS.RUNNING"
-                  class="h-5 w-5 rounded-full bg-yellow-500/10 flex items-center justify-center">
-                  <ZapIcon class="h-3 w-3 text-yellow-500 fill-yellow-500 animate-pulse" />
-                </div>
-                <div v-else-if="log.status === TASK_STATUS.PENDING"
-                  class="h-5 w-5 rounded-full bg-yellow-500/10 flex items-center justify-center">
-                  <Clock class="h-3 w-3 text-yellow-500" />
-                </div>
-                <div v-else-if="log.status === TASK_STATUS.TIMEOUT"
-                  class="h-5 w-5 rounded-full bg-orange-500/10 flex items-center justify-center">
-                  <AlertCircle class="h-3 w-3 text-orange-500" />
-                </div>
-                <div v-else-if="log.status === TASK_STATUS.CANCELLED"
-                  class="h-5 w-5 rounded-full bg-muted flex items-center justify-center">
-                  <Ban class="h-3 w-3 text-muted-foreground" />
-                </div>
-              </span>
               <span class="w-16 text-right shrink-0 text-muted-foreground text-xs whitespace-nowrap">{{ formatDuration(log.duration)
                 }}</span>
               <span class="w-8 shrink-0 flex justify-center opacity-100">
@@ -454,6 +437,15 @@ watch(() => route.query, (newQuery) => {
             </div>
             <!-- 大屏行 -->
             <div class="hidden sm:flex items-center gap-4 px-4 py-2">
+              <span class="w-3 flex justify-center shrink-0">
+                <div v-if="log.status === TASK_STATUS.SUCCESS" class="h-2 w-2 rounded-full bg-green-500 shrink-0" title="成功"></div>
+                <div v-else-if="log.status === TASK_STATUS.FAILED" class="h-2 w-2 rounded-full bg-red-500 shrink-0" title="失败"></div>
+                <div v-else-if="log.status === TASK_STATUS.RUNNING" class="h-2 w-2 rounded-full bg-amber-500 animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.5)] shrink-0" title="运行中"></div>
+                <div v-else-if="log.status === TASK_STATUS.PENDING" class="h-2 w-2 rounded-full bg-blue-400 animate-pulse shrink-0" title="等待中"></div>
+                <div v-else-if="log.status === TASK_STATUS.TIMEOUT" class="h-2 w-2 rounded-full bg-orange-500 shrink-0" title="超时"></div>
+                <div v-else-if="log.status === TASK_STATUS.CANCELLED" class="h-2 w-2 rounded-full bg-muted-foreground shrink-0" title="已取消"></div>
+                <div v-else class="h-2 w-2 rounded-full bg-muted-foreground/20 shrink-0"></div>
+              </span>
               <span class="w-16 shrink-0 text-muted-foreground text-sm">#{{ total - (currentPage - 1) * pageSize - index
                 }}</span>
               <span class="w-10 shrink-0 flex justify-center" :title="getTaskTypeTitle(log.task_type || 'task')">
@@ -464,32 +456,6 @@ watch(() => route.query, (newQuery) => {
               <code class="flex-1 min-w-0 text-muted-foreground truncate text-xs bg-muted/40 px-2 py-1 rounded">
                 <TextOverflow :text="log.command" title="执行命令" disable-dialog />
               </code>
-              <span class="w-12 flex justify-center shrink-0">
-                <div v-if="log.status === TASK_STATUS.SUCCESS"
-                  class="h-6 w-6 rounded-full bg-green-500/10 flex items-center justify-center">
-                  <Check class="h-3.5 w-3.5 text-green-500 stroke-[3]" />
-                </div>
-                <div v-else-if="log.status === TASK_STATUS.FAILED"
-                  class="h-6 w-6 rounded-full bg-red-500/10 flex items-center justify-center">
-                  <X class="h-3.5 w-3.5 text-red-500 stroke-[3]" />
-                </div>
-                <div v-else-if="log.status === TASK_STATUS.RUNNING"
-                  class="h-6 w-6 rounded-full bg-yellow-500/10 flex items-center justify-center">
-                  <ZapIcon class="h-3.5 w-3.5 text-yellow-500 fill-yellow-500 animate-pulse" />
-                </div>
-                <div v-else-if="log.status === TASK_STATUS.PENDING"
-                  class="h-6 w-6 rounded-full bg-yellow-500/10 flex items-center justify-center">
-                  <Clock class="h-3.5 w-3.5 text-yellow-500" />
-                </div>
-                <div v-else-if="log.status === TASK_STATUS.TIMEOUT"
-                  class="h-6 w-6 rounded-full bg-orange-500/10 flex items-center justify-center">
-                  <AlertCircle class="h-3.5 w-3.5 text-orange-500" />
-                </div>
-                <div v-else-if="log.status === TASK_STATUS.CANCELLED"
-                  class="h-6 w-6 rounded-full bg-muted flex items-center justify-center">
-                  <Ban class="h-3.5 w-3.5 text-muted-foreground" />
-                </div>
-              </span>
               <span class="w-16 text-right shrink-0 text-muted-foreground text-xs">{{ formatDuration(log.duration)
                 }}</span>
               <span v-if="!selectedLog"
