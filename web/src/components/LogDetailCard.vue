@@ -256,7 +256,7 @@ function getStatusBadgeClass(status: string) {
       
       <!-- 日志工具栏 (仅在 Full 模式展示，Simple 模式直接显示内容) -->
       <div v-if="variant === 'full'" 
-        class="px-4 py-2.5 text-sm text-muted-foreground border-b bg-muted/20 flex items-center justify-between shrink-0">
+        class="px-4 py-1 text-sm text-muted-foreground border-b bg-muted/20 flex items-center justify-between shrink-0">
         <span class="text-sm font-normal text-muted-foreground text-[12px]">日志输出</span>
         <Button variant="ghost" size="icon" class="h-6 w-6" @click="$emit('maximize')" title="全屏查看">
           <Maximize2 class="h-3.5 w-3.5" />

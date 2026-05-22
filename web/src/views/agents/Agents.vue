@@ -408,7 +408,7 @@ onUnmounted(() => {
               <span class="w-12 shrink-0 pl-1">序号</span>
               <span class="w-48 shrink-0">名称</span>
               <span class="flex-1 min-w-0">IP 地址</span>
-              <span class="w-24 shrink-0 text-center">操作</span>
+              <span class="w-28 shrink-0 text-center">操作</span>
             </div>
             <!-- 列表 -->
             <div class="divide-y text-sm">
@@ -421,10 +421,18 @@ onUnmounted(() => {
                   <div v-if="agent.description" class="text-[10px] text-muted-foreground truncate">{{ agent.description }}</div>
                 </div>
                 <span class="flex-1 min-w-0 text-xs text-muted-foreground truncate">{{ agent.ip || '-' }}</span>
-                <div class="w-24 shrink-0 flex justify-center">
-                  <Button variant="ghost" size="icon" class="h-6 w-6" @click="viewDetail(agent)"><Eye class="h-3 w-3" /></Button>
-                  <Button variant="ghost" size="icon" class="h-6 w-6" @click="viewTasks(agent)"><ListTodo class="h-3 w-3" /></Button>
-                  <Button variant="ghost" size="icon" class="h-6 w-6" @click="openEditDialog(agent)"><Pencil class="h-3 w-3" /></Button>
+                <div class="w-28 shrink-0 flex justify-center items-center">
+                  <span class="cursor-pointer group mr-1" @click="toggleEnabled(agent)" :title="agent.enabled ? '点击禁用' : '点击启用'">
+                    <div v-if="agent.enabled" class="h-6 w-6 rounded-md bg-green-500/5 flex items-center justify-center group-hover:bg-green-500/10">
+                      <Zap class="h-3 w-3 text-green-500 fill-green-500" />
+                    </div>
+                    <div v-else class="h-6 w-6 rounded-md bg-muted flex items-center justify-center group-hover:bg-muted/80">
+                      <ZapOff class="h-3 w-3 text-muted-foreground" />
+                    </div>
+                  </span>
+                  <Button variant="ghost" size="icon" class="h-6 w-6" @click="viewDetail(agent)" title="详情"><Eye class="h-3 w-3" /></Button>
+                  <Button variant="ghost" size="icon" class="h-6 w-6" @click="viewTasks(agent)" title="查看任务"><ListTodo class="h-3 w-3" /></Button>
+                  <Button variant="ghost" size="icon" class="h-6 w-6" @click="openEditDialog(agent)" title="编辑"><Pencil class="h-3 w-3" /></Button>
                   <DropdownMenu>
                     <DropdownMenuTrigger as-child>
                       <Button variant="ghost" size="icon" class="h-6 w-6"><MoreHorizontal class="h-3 w-3" /></Button>
