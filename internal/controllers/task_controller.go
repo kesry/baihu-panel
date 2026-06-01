@@ -56,30 +56,19 @@ func resolveWorkDir(workDir string) string {
 	}
 	return absPath
 }
-
+// CreateTask 创建任务
+// @Summary 创建任务
+// @Description 创建一个新的任务
+// @Tags 任务管理
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param body body vo.TaskCreateReq true "任务创建信息"
+// @Success 200 {object} utils.Response{data=vo.TaskVO}
+// @Failure 400 {object} utils.Response
+// @Router /tasks [post]
 func (tc *TaskController) CreateTask(c *gin.Context) {
-	var req struct {
-		Name          string               `json:"name" binding:"required"`
-		Remark        string               `json:"remark"`
-		Command       string               `json:"command"`
-		PreCommand    string               `json:"pre_command"`
-		PostCommand   string               `json:"post_command"`
-		Tags          string               `json:"tags"`
-		Type          string               `json:"type"`
-		Config        string               `json:"config"`
-		Schedule      string               `json:"schedule"`
-		Timeout       int                  `json:"timeout"`
-		WorkDir       string               `json:"work_dir"`
-		CleanConfig   string               `json:"clean_config"`
-		Envs          string               `json:"envs"`
-		Languages     models.TaskLanguages `json:"languages"`
-		AgentID       *string              `json:"agent_id"`
-		TriggerType   string               `json:"trigger_type"`
-		RetryCount    int                  `json:"retry_count"`
-		RetryInterval int                  `json:"retry_interval"`
-		RandomRange   int                  `json:"random_range"`
-		PinType       string               `json:"pin_type"`
-	}
+	var req vo.TaskCreateReq
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		utils.BadRequest(c, err.Error())
@@ -232,7 +221,7 @@ func (tc *TaskController) GetTask(c *gin.Context) {
 // @Produce json
 // @Security BearerAuth
 // @Param id path string true "任务ID"
-// @Param body body object true "任务更新信息"
+// @Param body body vo.TaskUpdateReq true "任务更新信息"
 // @Success 200 {object} utils.Response{data=vo.TaskVO}
 // @Failure 404 {object} utils.Response
 // @Router /tasks/{id} [put]
@@ -250,29 +239,7 @@ func (tc *TaskController) UpdateTask(c *gin.Context) {
 		oldAgentID = oldTask.AgentID
 	}
 
-	var req struct {
-		Name          string               `json:"name"`
-		Remark        string               `json:"remark"`
-		Command       string               `json:"command"`
-		PreCommand    string               `json:"pre_command"`
-		PostCommand   string               `json:"post_command"`
-		Tags          string               `json:"tags"`
-		Type          string               `json:"type"`
-		Config        string               `json:"config"`
-		Schedule      string               `json:"schedule"`
-		Timeout       int                  `json:"timeout"`
-		WorkDir       string               `json:"work_dir"`
-		CleanConfig   string               `json:"clean_config"`
-		Envs          string               `json:"envs"`
-		Enabled       bool                 `json:"enabled"`
-		Languages     models.TaskLanguages `json:"languages"`
-		AgentID       *string              `json:"agent_id"`
-		TriggerType   string               `json:"trigger_type"`
-		RetryCount    int                  `json:"retry_count"`
-		RetryInterval int                  `json:"retry_interval"`
-		RandomRange   int                  `json:"random_range"`
-		PinType       string               `json:"pin_type"`
-	}
+	var req vo.TaskUpdateReq
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		utils.BadRequest(c, err.Error())
