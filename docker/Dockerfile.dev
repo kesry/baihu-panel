@@ -44,7 +44,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint-dev.sh
 
 WORKDIR /app
 
-ENV MISE_TRUSTED_CONFIG_PATHS=/app/data/scrips
+ENV MISE_TRUSTED_CONFIG_PATHS=/app/data/scripts
 
 EXPOSE 8052 5173
 
